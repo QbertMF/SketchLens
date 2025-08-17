@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, Alert, Dimensions } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
+import * as MediaLibrary from 'expo-media-library';
 import * as ScreenOrientation from 'expo-screen-orientation';
 
 export default function CameraScreen() {
@@ -10,6 +11,7 @@ export default function CameraScreen() {
   const [overlayImage, setOverlayImage] = useState(null);
   const [imageOpacity, setImageOpacity] = useState(0.5);
   const [screenDimensions, setScreenDimensions] = useState(Dimensions.get('window'));
+  const cameraRef = useRef(null);
 
   useEffect(() => {
     const subscription = Dimensions.addEventListener('change', ({ window }) => {
@@ -68,9 +70,42 @@ export default function CameraScreen() {
     setOverlayImage(null);
   };
 
+  const takePicture = async () => {
+    if (!cameraRef.current) return;
+
+    try {
+      // Request media library permissions
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission needed', 'We need permission to save photos to your gallery!');
+        return;
+      }
+
+      // Take the photo
+      const photo = await cameraRef.current.takePictureAsync({
+        quality: 0.8,
+        base64: false,
+      });
+
+      // Save to media library
+      const asset = await MediaLibrary.createAssetAsync(photo.uri);
+      
+      // Show success message
+      Alert.alert(
+        'Photo Saved! 📸',
+        'Your photo has been saved to your gallery.',
+        [{ text: 'OK', style: 'default' }]
+      );
+
+    } catch (error) {
+      console.error('Error taking picture:', error);
+      Alert.alert('Error', 'Failed to take picture. Please try again.');
+    }
+  };
+
   return (
     <View style={styles.container} key={`${screenDimensions.width}-${screenDimensions.height}`}>
-      <CameraView style={styles.camera} facing={facing}>
+      <CameraView style={styles.camera} facing={facing} ref={cameraRef}>
         {/* Overlay Image */}
         {overlayImage && (
           <View style={styles.overlayContainer} pointerEvents="none">
@@ -123,6 +158,7 @@ export default function CameraScreen() {
           <TouchableOpacity 
             style={styles.captureButton}
             activeOpacity={0.7}
+            onPress={takePicture}
           >
             <Text style={styles.captureText}>📷</Text>
           </TouchableOpacity>
