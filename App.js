@@ -11,14 +11,86 @@ export default function CameraScreen() {
   const [overlayImage, setOverlayImage] = useState(null);
   const [imageOpacity, setImageOpacity] = useState(0.5);
   const [screenDimensions, setScreenDimensions] = useState(Dimensions.get('window'));
+  const [orientation, setOrientation] = useState('portrait');
   const cameraRef = useRef(null);
 
   useEffect(() => {
-    const subscription = Dimensions.addEventListener('change', ({ window }) => {
-      setScreenDimensions(window);
+    // Method 1: Use Dimensions (fallback)
+    const dimensionsSubscription = Dimensions.addEventListener('change', ({ window }) => {
+      const newDimensions = window;
+      setScreenDimensions(newDimensions);
+      
+      const newOrientation = newDimensions.width > newDimensions.height ? 'landscape' : 'portrait';
+      setOrientation(newOrientation);
+      
+      console.log(`Dimensions changed - Orientation: ${newOrientation}`, newDimensions);
     });
-    return () => subscription?.remove();
+
+    // Method 2: Use ScreenOrientation (preferred)
+    const setupOrientationListener = async () => {
+      try {
+        // Get initial orientation
+        const initialOrientation = await ScreenOrientation.getOrientationAsync();
+        const initialDimensions = Dimensions.get('window');
+        setScreenDimensions(initialDimensions);
+        
+        // Determine orientation string from enum
+        const isLandscape = initialOrientation === ScreenOrientation.Orientation.LANDSCAPE_LEFT || 
+                           initialOrientation === ScreenOrientation.Orientation.LANDSCAPE_RIGHT;
+        const initialOrientationString = isLandscape ? 'landscape' : 'portrait';
+        setOrientation(initialOrientationString);
+        console.log(`Initial orientation: ${initialOrientationString}`, initialOrientation);
+
+        // Set up orientation change listener
+        const orientationSubscription = ScreenOrientation.addOrientationChangeListener((event) => {
+          const { orientationInfo } = event;
+          const isLandscape = orientationInfo.orientation === ScreenOrientation.Orientation.LANDSCAPE_LEFT || 
+                             orientationInfo.orientation === ScreenOrientation.Orientation.LANDSCAPE_RIGHT;
+          
+          const newOrientation = isLandscape ? 'landscape' : 'portrait';
+          setOrientation(newOrientation);
+          
+          // Also update screen dimensions
+          const newDimensions = Dimensions.get('window');
+          setScreenDimensions(newDimensions);
+          
+          console.log(`ScreenOrientation changed to: ${newOrientation}`, orientationInfo);
+        });
+
+        return orientationSubscription;
+      } catch (error) {
+        console.warn('ScreenOrientation setup failed:', error);
+        return null;
+      }
+    };
+
+    let orientationSubscription = null;
+    setupOrientationListener().then(subscription => {
+      orientationSubscription = subscription;
+    });
+    
+    return () => {
+      dimensionsSubscription?.remove();
+      if (orientationSubscription) {
+        ScreenOrientation.removeOrientationChangeListener(orientationSubscription);
+      }
+    };
   }, []);
+
+  // Get screen orientation info
+  const getOrientationInfo = () => {
+    const { width, height } = screenDimensions;
+    const isLandscape = width > height;
+    const aspectRatio = width / height;
+    
+    return {
+      isLandscape,
+      isPortrait: !isLandscape,
+      aspectRatio,
+      width,
+      height
+    };
+  };
 
   if (!permission) {
     return <View><Text>Requesting camera permission...</Text></View>;
@@ -70,6 +142,29 @@ export default function CameraScreen() {
     setOverlayImage(null);
   };
 
+  const getImageRotation = () => {
+    // When the device rotates to landscape, we need to counter-rotate the image
+    // to maintain its original orientation relative to the real world
+    console.log(`Current orientation for rotation: ${orientation}`);
+    return orientation === 'landscape' ? '0deg' : '0deg';
+  };
+
+  const getOverlayContainerStyle = () => {
+    // Container doesn't need to change, it should always fill the screen
+    return styles.overlayContainer;
+  };
+
+  const getOverlayImageStyle = () => {
+    const rotation = getImageRotation();
+    console.log(`Applying rotation: ${rotation} for orientation: ${orientation}`);
+    
+    return {
+      ...styles.overlayImage,
+      opacity: imageOpacity,
+      transform: [{ rotate: rotation }],
+    };
+  };
+
   const takePicture = async () => {
     if (!cameraRef.current) return;
 
@@ -108,10 +203,10 @@ export default function CameraScreen() {
       <CameraView style={styles.camera} facing={facing} ref={cameraRef}>
         {/* Overlay Image */}
         {overlayImage && (
-          <View style={styles.overlayContainer} pointerEvents="none">
+          <View style={getOverlayContainerStyle()} pointerEvents="none">
             <Image 
               source={{ uri: overlayImage }} 
-              style={[styles.overlayImage, { opacity: imageOpacity }]}
+              style={getOverlayImageStyle()}
               resizeMode="contain"
             />
           </View>
@@ -144,6 +239,10 @@ export default function CameraScreen() {
               </TouchableOpacity>
             </>
           )}
+          {/* Debug orientation indicator */}
+          {/* <View style={styles.orientationIndicator}>
+            <Text style={styles.orientationText}>{orientation}</Text>
+          </View> */}
         </View>
 
         {/* Bottom Controls */}
@@ -217,6 +316,18 @@ const styles = StyleSheet.create({
   smallButtonText: {
     fontSize: 20,
     textAlign: 'center',
+  },
+  orientationIndicator: {
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginLeft: 10,
+  },
+  orientationText: {
+    fontSize: 12,
+    color: '#000',
+    fontWeight: 'bold',
   },
   buttonContainer: {
     position: 'absolute',
