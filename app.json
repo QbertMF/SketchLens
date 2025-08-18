@@ -24,10 +24,16 @@
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
-      ]
+      ],
+      "package": "de.qbert.SketchLens"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "5b5714fe-0b46-4fcc-b601-8d887d6d21ff"
+      }
     }
   }
 }
