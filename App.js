@@ -4,6 +4,13 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import * as MediaLibrary from 'expo-media-library';
 import * as ScreenOrientation from 'expo-screen-orientation';
+import { GestureHandlerRootView, Gesture, GestureDetector } from 'react-native-gesture-handler';
+import Animated, { 
+  useAnimatedStyle, 
+  useSharedValue, 
+  withSpring,
+  runOnJS
+} from 'react-native-reanimated';
 
 export default function CameraScreen() {
   const [facing, setFacing] = useState('back');
@@ -13,6 +20,44 @@ export default function CameraScreen() {
   const [screenDimensions, setScreenDimensions] = useState(Dimensions.get('window'));
   const [orientation, setOrientation] = useState('portrait');
   const cameraRef = useRef(null);
+
+  // Gesture handling for overlay image
+  const scale = useSharedValue(1);
+  const translateX = useSharedValue(0);
+  const translateY = useSharedValue(0);
+  const savedScale = useSharedValue(1);
+  const savedTranslateX = useSharedValue(0);
+  const savedTranslateY = useSharedValue(0);
+
+  // Combined gesture using the new Gesture API
+  const gesture = Gesture.Simultaneous(
+    Gesture.Pan()
+      .onUpdate((event) => {
+        translateX.value = savedTranslateX.value + event.translationX;
+        translateY.value = savedTranslateY.value + event.translationY;
+      })
+      .onEnd(() => {
+        savedTranslateX.value = translateX.value;
+        savedTranslateY.value = translateY.value;
+      }),
+    Gesture.Pinch()
+      .onUpdate((event) => {
+        scale.value = savedScale.value * event.scale;
+      })
+      .onEnd(() => {
+        savedScale.value = scale.value;
+      })
+  );
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        { translateX: translateX.value },
+        { translateY: translateY.value },
+        { scale: scale.value },
+      ],
+    };
+  });
 
   useEffect(() => {
     // Method 1: Use Dimensions (fallback)
@@ -140,6 +185,22 @@ export default function CameraScreen() {
 
   const clearOverlay = () => {
     setOverlayImage(null);
+    // Reset gesture values when clearing overlay
+    scale.value = withSpring(1);
+    translateX.value = withSpring(0);
+    translateY.value = withSpring(0);
+    savedScale.value = 1;
+    savedTranslateX.value = 0;
+    savedTranslateY.value = 0;
+  };
+
+  const resetImagePosition = () => {
+    scale.value = withSpring(1);
+    translateX.value = withSpring(0);
+    translateY.value = withSpring(0);
+    savedScale.value = 1;
+    savedTranslateX.value = 0;
+    savedTranslateY.value = 0;
   };
 
   const getImageRotation = () => {
@@ -203,13 +264,20 @@ export default function CameraScreen() {
       <CameraView style={styles.camera} facing={facing} ref={cameraRef}>
         {/* Overlay Image */}
         {overlayImage && (
-          <View style={getOverlayContainerStyle()} pointerEvents="none">
-            <Image 
-              source={{ uri: overlayImage }} 
-              style={getOverlayImageStyle()}
-              resizeMode="contain"
-            />
-          </View>
+          <GestureHandlerRootView style={StyleSheet.absoluteFillObject}>
+            <GestureDetector gesture={gesture}>
+              <Animated.View 
+                style={[getOverlayContainerStyle(), animatedStyle]} 
+                pointerEvents="auto"
+              >
+                <Image 
+                  source={{ uri: overlayImage }} 
+                  style={getOverlayImageStyle()}
+                  resizeMode="contain"
+                />
+              </Animated.View>
+            </GestureDetector>
+          </GestureHandlerRootView>
         )}
         
         {/* Top Controls */}
@@ -229,6 +297,13 @@ export default function CameraScreen() {
                 activeOpacity={0.7}
               >
                 <Text style={styles.smallButtonText}>🔆</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={styles.smallButton} 
+                onPress={resetImagePosition}
+                activeOpacity={0.7}
+              >
+                <Text style={[styles.smallButtonText, { color: 'white', fontWeight: 'bold' }]}>R</Text>
               </TouchableOpacity>
               <TouchableOpacity 
                 style={styles.smallButton} 
