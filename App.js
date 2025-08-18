@@ -252,7 +252,7 @@ export default function CameraScreen() {
             onPress={toggleCameraFacing}
             activeOpacity={0.7}
           >
-            <Text style={styles.text}>🔄</Text>
+            <Text style={styles.flipText}>↻</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             style={styles.captureButton}
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
   smallButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 10,
+    padding: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
     borderRadius: 25,
     width: 50,
@@ -316,6 +316,9 @@ const styles = StyleSheet.create({
   smallButtonText: {
     fontSize: 20,
     textAlign: 'center',
+    textAlignVertical: 'center',
+    lineHeight: 20,
+    includeFontPadding: false,
   },
   orientationIndicator: {
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
@@ -354,7 +357,7 @@ const styles = StyleSheet.create({
   flipButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 15,
+    padding: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
     borderRadius: 50,
     width: 60,
@@ -364,7 +367,7 @@ const styles = StyleSheet.create({
   captureButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 15,
+    padding: 0,
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
     borderRadius: 50,
     width: 80,
@@ -378,9 +381,26 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#fff',
     textAlign: 'center',
+    textAlignVertical: 'center',
+    lineHeight: 24,
+    includeFontPadding: false,
+  },
+  flipText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    lineHeight: 20,
+    includeFontPadding: false,
+    marginTop: -10,
   },
   captureText: {
     fontSize: 30,
     textAlign: 'center',
+    textAlignVertical: 'center',
+    lineHeight: 30,
+    includeFontPadding: false,
+    marginTop: -10,
   },
 });
