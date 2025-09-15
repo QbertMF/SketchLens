@@ -41,21 +41,21 @@ export default function CameraScreen() {
 
   // Helper function to set scale with logging
   const setScaleValue = (newScale) => {
-    console.log('🎯 setScaleValue called - setting scale from', scale.value, 'to', newScale);
+    //console.log('🎯 setScaleValue called - setting scale from', scale.value, 'to', newScale);
     scale.value = newScale;
-    console.log('🎯 setScaleValue complete - scale.value is now', scale.value);
+    //console.log('🎯 setScaleValue complete - scale.value is now', scale.value);
   };
 
   // Helper function to calculate distance between two touches
   const getDistance = (touches) => {
     if (!touches || touches.length < 2) {
-      console.log('⚠️ getDistance: Invalid touches', touches ? touches.length : 'null');
+      //console.log('⚠️ getDistance: Invalid touches', touches ? touches.length : 'null');
       return 0;
     }
     
     const [touch1, touch2] = touches;
     if (!touch1 || !touch2 || !touch1.pageX || !touch1.pageY || !touch2.pageX || !touch2.pageY) {
-      console.log('⚠️ getDistance: Invalid touch data', { touch1, touch2 });
+      //console.log('⚠️ getDistance: Invalid touch data', { touch1, touch2 });
       return 0;
     }
     
@@ -63,11 +63,11 @@ export default function CameraScreen() {
     const dy = touch1.pageY - touch2.pageY;
     const distance = Math.sqrt(dx * dx + dy * dy);
     
-    console.log('📏 Distance calculated:', {
-      touch1: { x: touch1.pageX, y: touch1.pageY },
-      touch2: { x: touch2.pageX, y: touch2.pageY },
-      dx, dy, distance: distance.toFixed(1)
-    });
+    //console.log('📏 Distance calculated:', {
+    //  touch1: { x: touch1.pageX, y: touch1.pageY },
+    //  touch2: { x: touch2.pageX, y: touch2.pageY },
+    //  dx, dy, distance: distance.toFixed(1)
+    //});
     
     return distance;
   };
@@ -87,27 +87,27 @@ export default function CameraScreen() {
       onStartShouldSetPanResponder: (evt) => {
         const { nativeEvent } = evt;
         const touchCount = nativeEvent.touches.length;
-        console.log('� Touch start - touches:', touchCount);
+        //console.log('� Touch start - touches:', touchCount);
         lastTouchCount.current = touchCount;
         return true;
       },
       onMoveShouldSetPanResponder: (evt, gestureState) => {
         const { nativeEvent } = evt;
         const touchCount = nativeEvent.touches.length;
-        console.log('👋 Should set responder - touches:', touchCount, 'movement:', gestureState.dx, gestureState.dy);
+        //console.log('👋 Should set responder - touches:', touchCount, 'movement:', gestureState.dx, gestureState.dy);
         return true; // Always take control
       },
       onPanResponderGrant: (evt) => {
         const { nativeEvent } = evt;
         const touchCount = nativeEvent.touches.length;
-        console.log('🚀 Gesture GRANTED - touches:', touchCount);
+        //console.log('🚀 Gesture GRANTED - touches:', touchCount);
         
         // Set up initial values regardless of touch count
         initialX.current = translateX.value;
         initialY.current = translateY.value;
         initialScale.current = scale.value;
         
-        console.log('� Initial values set - position:', initialX.current, initialY.current, 'scale:', initialScale.current);
+        //console.log('� Initial values set - position:', initialX.current, initialY.current, 'scale:', initialScale.current);
       },
       onPanResponderMove: (evt, gestureState) => {
         const { nativeEvent } = evt;
@@ -115,11 +115,11 @@ export default function CameraScreen() {
         
         // Detect touch count changes
         if (touchCount !== lastTouchCount.current) {
-          console.log('🔄 Touch count changed from', lastTouchCount.current, 'to', touchCount);
+          //console.log('🔄 Touch count changed from', lastTouchCount.current, 'to', touchCount);
           lastTouchCount.current = touchCount;
         }
         
-        console.log('📱 MOVE EVENT - touches:', touchCount, 'isPinching:', isPinching.current);
+        //console.log('📱 MOVE EVENT - touches:', touchCount, 'isPinching:', isPinching.current);
         
         // START PINCH MODE when 2+ touches detected
         if (touchCount >= 2 && !isPinching.current) {
@@ -127,19 +127,19 @@ export default function CameraScreen() {
           const distance = getDistance(nativeEvent.touches);
           initialDistance.current = distance;
           initialScale.current = scale.value; // Update initial scale when pinch starts
-          console.log('🤏 PINCH MODE ACTIVATED - distance:', distance, 'initialScale:', initialScale.current);
+          //console.log('🤏 PINCH MODE ACTIVATED - distance:', distance, 'initialScale:', initialScale.current);
         }
         
         // HANDLE PINCH LOGIC if in pinch mode and have 2+ touches
         if (isPinching.current && touchCount >= 2) {
           const currentDistance = getDistance(nativeEvent.touches);
-          console.log('🤏 PINCH ACTIVE - distance:', currentDistance, 'initial:', initialDistance.current);
+          //console.log('🤏 PINCH ACTIVE - distance:', currentDistance, 'initial:', initialDistance.current);
           
           if (initialDistance.current > 0 && currentDistance > 0) {
             const scaleRatio = currentDistance / initialDistance.current;
             const newScale = Math.max(0.5, Math.min(2.5, initialScale.current * scaleRatio));
             
-            console.log('🔄 PINCH SCALING - ratio:', scaleRatio.toFixed(2), 'newScale:', newScale.toFixed(2));
+            //console.log('🔄 PINCH SCALING - ratio:', scaleRatio.toFixed(2), 'newScale:', newScale.toFixed(2));
             setScaleValue(newScale);
           }
         }
@@ -151,26 +151,26 @@ export default function CameraScreen() {
           const constrained = constrainTranslation(newX, newY);
           translateX.value = constrained.x;
           translateY.value = constrained.y;
-          console.log('👆 PANNING - dx:', gestureState.dx, 'dy:', gestureState.dy);
+          //console.log('👆 PANNING - dx:', gestureState.dx, 'dy:', gestureState.dy);
         }
         // MAINTAIN PINCH STATE if pinching but touch count dropped
         else if (isPinching.current && touchCount < 2) {
-          console.log('🤏 PINCH STATE MAINTAINED - waiting for gesture end, current scale:', scale.value);
+          //console.log('🤏 PINCH STATE MAINTAINED - waiting for gesture end, current scale:', scale.value);
         }
       },
       onPanResponderRelease: (evt) => {
         const { nativeEvent } = evt;
         const touchCount = nativeEvent.touches.length;
-        console.log('🛑 Gesture ended - touches:', touchCount, 'final scale:', scale.value, 'isPinching:', isPinching.current);
+        //console.log('🛑 Gesture ended - touches:', touchCount, 'final scale:', scale.value, 'isPinching:', isPinching.current);
         
         // Only reset pinch state when NO touches remain (your brilliant suggestion!)
         if (touchCount === 0) {
-          console.log('✅ All fingers lifted - resetting pinch state');
+          //console.log('✅ All fingers lifted - resetting pinch state');
           isPinching.current = false;
           initialDistance.current = 0;
           lastTouchCount.current = 0;
         } else {
-          console.log('👆 Still have touches - maintaining pinch state');
+          //console.log('👆 Still have touches - maintaining pinch state');
         }
         
         // Spring back to bounds for translation
@@ -182,23 +182,23 @@ export default function CameraScreen() {
         const currentScale = scale.value;
         if (currentScale < 0.5) {
           scale.value = withSpring(0.5);
-          console.log('📏 Scale corrected to minimum: 0.5');
+          //console.log('📏 Scale corrected to minimum: 0.5');
         } else if (currentScale > 2.5) {
           scale.value = withSpring(2.5);
-          console.log('📏 Scale corrected to maximum: 2.5');
+          //console.log('📏 Scale corrected to maximum: 2.5');
         } else {
-          console.log('📏 Scale maintained at:', currentScale);
+          //console.log('📏 Scale maintained at:', currentScale);
         }
       },
       onPanResponderTerminationRequest: (evt) => {
         const { nativeEvent } = evt;
-        console.log('🚫 TERMINATION REQUEST - touches:', nativeEvent.touches.length, 'wasMultiTouch:', wasMultiTouch.current);
+        //console.log('🚫 TERMINATION REQUEST - touches:', nativeEvent.touches.length, 'wasMultiTouch:', wasMultiTouch.current);
         // Don't allow termination during multi-touch gestures
         if (nativeEvent.touches.length >= 2 || wasMultiTouch.current) {
-          console.log('🚫 Preventing termination during/after pinch gesture');
+          //console.log('🚫 Preventing termination during/after pinch gesture');
           return false;
         }
-        console.log('✅ Allowing termination for single touch gesture');
+        //console.log('✅ Allowing termination for single touch gesture');
         return true;
       },
       onShouldBlockNativeResponder: () => {
@@ -331,6 +331,13 @@ export default function CameraScreen() {
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
+      theme: {
+        colors: {
+          header: '#fff', // white header text
+          background: '#3f9c90ff', // dark background
+          text: '#fff', // white text
+        }
+      }
     });
 
     if (!result.canceled) {
@@ -434,23 +441,34 @@ export default function CameraScreen() {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <ScrollView style={styles.modalScroll} contentContainerStyle={styles.modalScrollContent} showsVerticalScrollIndicator={true}>
-              <Text style={styles.modalTitle}>SketchLens</Text>
-              <Text style={styles.modalVersion}>Version 1.0.0</Text>
-              <Text style={styles.modalSectionTitle}>Button Guide</Text>
-              <Text style={styles.modalText}>Top Controls:</Text>
-              <Text style={styles.modalText}>📁 - Select reference image from gallery</Text>
-              <Text style={styles.modalText}>🔆 - Adjust overlay image opacity</Text>
-              <Text style={styles.modalText}>🔍 - Toggle overlay image scale</Text>
-              <Text style={styles.modalText}>R - Reset overlay image position/scale</Text>
-              <Text style={styles.modalText}>❌ - Remove overlay image</Text>
-              <Text style={styles.modalText}>i - Show information (this modal)</Text>
-              <Text style={styles.modalText}>Bottom Controls:</Text>
-              <Text style={styles.modalText}>↻ - Swap camera (front/back)</Text>
-              <Text style={styles.modalText}>📷 - Take a photo</Text>
-              <Text style={styles.modalSectionTitle}>App Usage</Text>
-              <Text style={styles.modalText}>
-                Either start by taking a photo with the camera button or select the folder icon to choose a reference picture from your phone's gallery. Make sure to position the photo over a piece of paper. Note: You might want to place the phone on top of a glass or mug to help with positioning. Adjust the reference picture so that the image is in the desired position. Note: Draw the extents of the object to be copied on the target surface. Note that the camera is not centered, so you may need to offset the phone accordingly to center the object to be copied. Adjust the app settings as needed. Now start tracing the reference image.
-              </Text>
+              <View>
+                <Text style={styles.modalTitle}>SketchLens</Text>
+                <Text style={styles.modalVersion}>Version 1.0.0</Text>
+                <Text style={styles.modalSectionTitle}>Button Guide</Text>
+                <Text style={styles.modalText}><Ionicons name="image-outline" size={16} color="#444" />  - Select reference image</Text>
+                <Text style={styles.modalText}><Ionicons name="bulb-outline" size={16} color="#444" /> - Adjust overlay opacity</Text>
+                <Text style={styles.modalText}><Ionicons name="expand-outline" size={16} color="#444" /> - Overlay image scale</Text>
+                <Text style={styles.modalText}><Ionicons name="arrow-undo-outline" size={16} color="#444" /> - Reset overlay</Text>
+                <Text style={styles.modalText}><Ionicons name="trash-outline" size={16} color="#444" /> - Remove overlay</Text>
+                <Text style={styles.modalText}><Ionicons name="camera-reverse-outline" size={16} color="#444" /> - Swap camera (front/back)</Text>
+                <Text style={styles.modalText}><Ionicons name="camera-outline" size={16} color="#444" /> - Take a photo</Text>
+                <Text style={styles.modalText}>
+                  Change the scale and position of the overlay by pinching with two fingers to zoom in/out, and dragging with one finger to move the image around. 
+                </Text>
+                <Text style={styles.modalSectionTitle}>App Usage</Text>
+                <Text style={styles.modalText}>
+                  Either start by taking a photo with the camera button or select the image icon to choose a reference picture from your phone's gallery. Make sure to position the photo over a piece of paper.
+                </Text>
+                <Text style={styles.modalText}>
+                  You might want to place the phone on top of a glass or mug to help with positioning. Adjust the reference picture so that the image is in the desired position.
+                </Text>
+                <Text style={styles.modalText}>
+                  Draw the extents of the object to be copied on the target surface.
+                </Text>
+                <Text style={styles.modalText}>
+                  Note: The camera is not centered, so you may need to offset the phone accordingly to center the object to be copied. Adjust the app settings as needed. Now start tracing the reference image.
+                </Text>
+              </View>
             </ScrollView>
             <TouchableOpacity style={styles.modalCloseButton} onPress={() => setInfoVisible(false)}>
               <Text style={styles.modalCloseText}>Close</Text>
@@ -508,7 +526,7 @@ export default function CameraScreen() {
             activeOpacity={0.7}
             pointerEvents="auto"
           >
-            <Text style={styles.smallButtonText}>📁</Text>
+            <Ionicons name="image-outline" size={28} color="white" />
           </TouchableOpacity>
           {overlayImage && (
             <>
@@ -518,19 +536,19 @@ export default function CameraScreen() {
                 activeOpacity={0.7}
                 pointerEvents="auto"
               >
-                <Text style={styles.smallButtonText}>🔆</Text>
+                <Ionicons name="bulb-outline" size={28} color="white" />
               </TouchableOpacity>
               <TouchableOpacity 
                 style={styles.smallButton} 
                 onPress={() => {
                   const newScale = scale.value === 1 ? 1.8 : 1;
                   scale.value = withSpring(newScale);
-                  console.log('🔍 Manual scale test:', newScale);
+                  console.log('Expand Manual scale test:', newScale);
                 }}
                 activeOpacity={0.7}
                 pointerEvents="auto"
               >
-                <Text style={styles.smallButtonText}>🔍</Text>
+                <Ionicons name="expand-outline" size={28} color="white" />
               </TouchableOpacity>
               <TouchableOpacity 
                 style={styles.smallButton} 
@@ -538,7 +556,7 @@ export default function CameraScreen() {
                 activeOpacity={0.7}
                 pointerEvents="auto"
               >
-                <Text style={[styles.smallButtonText, { color: 'white', fontWeight: 'bold' }]}>R</Text>
+                <Ionicons name="arrow-undo-outline" size={28} color="white" />
               </TouchableOpacity>
               <TouchableOpacity 
                 style={styles.smallButton} 
@@ -546,7 +564,7 @@ export default function CameraScreen() {
                 activeOpacity={0.7}
                 pointerEvents="auto"
               >
-                <Text style={styles.smallButtonText}>❌</Text>
+                <Ionicons name="trash-outline" size={28} color="white" />
               </TouchableOpacity>
             </>
           )}
@@ -569,7 +587,7 @@ export default function CameraScreen() {
             activeOpacity={0.7}
             pointerEvents="auto"
           >
-            <Text style={styles.flipText}>↻</Text>
+            <Ionicons name="camera-reverse-outline" size={32} color="white" />
           </TouchableOpacity>
           <TouchableOpacity 
             style={styles.captureButton}
@@ -577,7 +595,7 @@ export default function CameraScreen() {
             onPress={takePicture}
             pointerEvents="auto"
           >
-            <Text style={styles.captureText}>📷</Text>
+            <Ionicons name="camera-outline" size={36} color="#222" />
           </TouchableOpacity>
         </View>
       </CameraView>
@@ -674,9 +692,9 @@ const styles = StyleSheet.create({
   },
   topControls: {
     position: 'absolute',
-    top: 60,
-    left: 15,
-    right: 15,
+    top: 40,
+    left: 28,
+    right: 22,
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
