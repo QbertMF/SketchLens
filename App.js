@@ -10,6 +10,7 @@ import Animated, {
   withSpring,
   runOnJS
 } from 'react-native-reanimated';
+import { useKeepAwake } from 'expo-keep-awake';
 
 export default function CameraScreen() {
   const [facing, setFacing] = useState('back');
@@ -213,6 +214,9 @@ export default function CameraScreen() {
       ],
     };
   });
+
+  // Prevent screen from sleeping during sketching
+  useKeepAwake();
 
   useEffect(() => {
     // Method 1: Use Dimensions (fallback)
