@@ -16,6 +16,9 @@
       "supportsTablet": true
     },
     "android": {
+        "config": {
+          "googleMobileAdsAppId": "ca-app-pub-5939388532042811~8359733839"
+        },
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"

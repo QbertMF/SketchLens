@@ -1,4 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
+let AdMobBanner = null;
+import Constants from 'expo-constants';
+if (Constants.appOwnership !== 'expo') {
+  try {
+    AdMobBanner = require('expo-ads-admob').AdMobBanner;
+  } catch (e) {
+    AdMobBanner = null;
+  }
+}
 import { Ionicons } from '@expo/vector-icons';
 import { Modal, ScrollView } from 'react-native';
 import { StyleSheet, Text, View, TouchableOpacity, Image, Alert, Dimensions, PanResponder } from 'react-native';
@@ -599,6 +608,31 @@ export default function CameraScreen() {
           </TouchableOpacity>
         </View>
       </CameraView>
+      {/* AdMob Banner Ad or warning */}
+      {Constants.appOwnership === 'expo' ? (
+        <View style={{ alignItems: 'center', marginBottom: 8 }}>
+          <Text style={{ color: 'red', fontSize: 14 }}>
+            AdMob is not supported in Expo Go. Build a custom app to enable ads.
+          </Text>
+        </View>
+      ) : AdMobBanner ? (
+        <View style={{ alignItems: 'center', marginBottom: 8 }}>
+          <AdMobBanner
+            bannerSize="smartBannerPortrait"
+            adUnitID="ca-app-pub-5939388532042811/1522862745"
+            servePersonalizedAds
+            onDidFailToReceiveAdWithError={error => {
+              console.log('AdMob error:', error);
+            }}
+          />
+        </View>
+      ) : (
+        <View style={{ alignItems: 'center', marginBottom: 8 }}>
+          <Text style={{ color: 'red', fontSize: 14 }}>
+            AdMobBanner component not available.
+          </Text>
+        </View>
+      )}
     </View>
   );
 }
