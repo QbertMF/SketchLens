@@ -22,8 +22,9 @@
       },
       "edgeToEdgeEnabled": true,
       "permissions": [
-        "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO"
+        "CAMERA",
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE"
       ],
       "package": "de.qbert.SketchLens"
     },

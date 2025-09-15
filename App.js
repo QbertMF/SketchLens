@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Ionicons } from '@expo/vector-icons';
 import { Modal, ScrollView } from 'react-native';
 import { StyleSheet, Text, View, TouchableOpacity, Image, Alert, Dimensions, PanResponder } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
@@ -442,13 +443,13 @@ export default function CameraScreen() {
               <Text style={styles.modalText}>🔍 - Toggle overlay image scale</Text>
               <Text style={styles.modalText}>R - Reset overlay image position/scale</Text>
               <Text style={styles.modalText}>❌ - Remove overlay image</Text>
-              <Text style={styles.modalText}>I - Show information (this modal)</Text>
+              <Text style={styles.modalText}>i - Show information (this modal)</Text>
               <Text style={styles.modalText}>Bottom Controls:</Text>
               <Text style={styles.modalText}>↻ - Swap camera (front/back)</Text>
               <Text style={styles.modalText}>📷 - Take a photo</Text>
               <Text style={styles.modalSectionTitle}>App Usage</Text>
               <Text style={styles.modalText}>
-                Either start by making a photo with the camera button or select the folder to choose a reference picture from the phones gallery. Make sure to position the photo over a piece of paper. Note: You might want to place the phone on top of a glass or mug to position it. Adjust the reference picture such that the the image will in the desired position. Note: draw the extents of the object to be copied on the target surface. Note that the camera is not centered and the phone most likely needs to offset accordingly to center the object to be copied. Adjust the app settings as needed. Now start tracing the reference image.
+                Either start by taking a photo with the camera button or select the folder icon to choose a reference picture from your phone's gallery. Make sure to position the photo over a piece of paper. Note: You might want to place the phone on top of a glass or mug to help with positioning. Adjust the reference picture so that the image is in the desired position. Note: Draw the extents of the object to be copied on the target surface. Note that the camera is not centered, so you may need to offset the phone accordingly to center the object to be copied. Adjust the app settings as needed. Now start tracing the reference image.
               </Text>
             </ScrollView>
             <TouchableOpacity style={styles.modalCloseButton} onPress={() => setInfoVisible(false)}>
@@ -556,7 +557,7 @@ export default function CameraScreen() {
             activeOpacity={0.7}
             pointerEvents="auto"
           >
-            <Text style={[styles.smallButtonText, { color: 'white', fontWeight: 'bold' }]}>I</Text>
+            <Ionicons name="information-circle" size={28} color="white" />
           </TouchableOpacity>
         </View>
 
@@ -674,10 +675,11 @@ const styles = StyleSheet.create({
   topControls: {
     position: 'absolute',
     top: 60,
-    left: 20,
-    right: 20,
+    left: 15,
+    right: 15,
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    alignItems: 'center',
     zIndex: 1000,
     elevation: 1000,
   },
@@ -687,9 +689,9 @@ const styles = StyleSheet.create({
     padding: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
     borderRadius: 25,
-    width: 50,
-    height: 50,
-    marginRight: 10,
+    width: 46,
+    height: 46,
+    marginRight: 6,
     elevation: 1000,
     zIndex: 1000,
   },
