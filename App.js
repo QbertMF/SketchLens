@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Modal, ScrollView } from 'react-native';
 import { StyleSheet, Text, View, TouchableOpacity, Image, Alert, Dimensions, PanResponder } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
@@ -13,6 +14,7 @@ import Animated, {
 import { useKeepAwake } from 'expo-keep-awake';
 
 export default function CameraScreen() {
+  const [infoVisible, setInfoVisible] = useState(false);
   const [facing, setFacing] = useState('back');
   const [permission, requestPermission] = useCameraPermissions();
   const [overlayImage, setOverlayImage] = useState(null);
@@ -421,6 +423,40 @@ export default function CameraScreen() {
 
   return (
     <View style={styles.container} key={`${screenDimensions.width}-${screenDimensions.height}`}>
+      {/* Info Modal */}
+      <Modal
+        visible={infoVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setInfoVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <ScrollView style={styles.modalScroll} contentContainerStyle={styles.modalScrollContent} showsVerticalScrollIndicator={true}>
+              <Text style={styles.modalTitle}>SketchLens</Text>
+              <Text style={styles.modalVersion}>Version 1.0.0</Text>
+              <Text style={styles.modalSectionTitle}>Button Guide</Text>
+              <Text style={styles.modalText}>Top Controls:</Text>
+              <Text style={styles.modalText}>📁 - Select reference image from gallery</Text>
+              <Text style={styles.modalText}>🔆 - Adjust overlay image opacity</Text>
+              <Text style={styles.modalText}>🔍 - Toggle overlay image scale</Text>
+              <Text style={styles.modalText}>R - Reset overlay image position/scale</Text>
+              <Text style={styles.modalText}>❌ - Remove overlay image</Text>
+              <Text style={styles.modalText}>I - Show information (this modal)</Text>
+              <Text style={styles.modalText}>Bottom Controls:</Text>
+              <Text style={styles.modalText}>↻ - Swap camera (front/back)</Text>
+              <Text style={styles.modalText}>📷 - Take a photo</Text>
+              <Text style={styles.modalSectionTitle}>App Usage</Text>
+              <Text style={styles.modalText}>
+                Either start by making a photo with the camera button or select the folder to choose a reference picture from the phones gallery. Make sure to position the photo over a piece of paper. Note: You might want to place the phone on top of a glass or mug to position it. Adjust the reference picture such that the the image will in the desired position. Note: draw the extents of the object to be copied on the target surface. Note that the camera is not centered and the phone most likely needs to offset accordingly to center the object to be copied. Adjust the app settings as needed. Now start tracing the reference image.
+              </Text>
+            </ScrollView>
+            <TouchableOpacity style={styles.modalCloseButton} onPress={() => setInfoVisible(false)}>
+              <Text style={styles.modalCloseText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
       <CameraView style={styles.camera} facing={facing} ref={cameraRef}>
         {/* Overlay Image */}
         {overlayImage && (
@@ -486,7 +522,7 @@ export default function CameraScreen() {
               <TouchableOpacity 
                 style={styles.smallButton} 
                 onPress={() => {
-                  const newScale = scale.value === 1 ? 1.8 : 1; // Reduced test scale
+                  const newScale = scale.value === 1 ? 1.8 : 1;
                   scale.value = withSpring(newScale);
                   console.log('🔍 Manual scale test:', newScale);
                 }}
@@ -513,10 +549,15 @@ export default function CameraScreen() {
               </TouchableOpacity>
             </>
           )}
-          {/* Debug orientation indicator */}
-          {/* <View style={styles.orientationIndicator}>
-            <Text style={styles.orientationText}>{orientation}</Text>
-          </View> */}
+          {/* Info Button */}
+          <TouchableOpacity 
+            style={styles.smallButton} 
+            onPress={() => setInfoVisible(true)}
+            activeOpacity={0.7}
+            pointerEvents="auto"
+          >
+            <Text style={[styles.smallButtonText, { color: 'white', fontWeight: 'bold' }]}>I</Text>
+          </TouchableOpacity>
         </View>
 
         {/* Bottom Controls */}
@@ -544,6 +585,67 @@ export default function CameraScreen() {
 }
 
 const styles = StyleSheet.create({
+  modalScroll: {
+    width: '100%',
+    maxHeight: 350,
+    marginBottom: 8,
+  },
+  modalScrollContent: {
+    paddingBottom: 8,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 2000,
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 16,
+    padding: 24,
+    width: '85%',
+    maxWidth: 400,
+    alignItems: 'center',
+    elevation: 10,
+  },
+  modalTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    color: '#222',
+  },
+  modalVersion: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 16,
+  },
+  modalSectionTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: 12,
+    marginBottom: 4,
+    color: '#333',
+    alignSelf: 'flex-start',
+  },
+  modalText: {
+    fontSize: 14,
+    color: '#444',
+    marginBottom: 4,
+    alignSelf: 'flex-start',
+  },
+  modalCloseButton: {
+    marginTop: 18,
+    backgroundColor: '#222',
+    borderRadius: 8,
+    paddingHorizontal: 24,
+    paddingVertical: 8,
+  },
+  modalCloseText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
