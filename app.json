@@ -16,9 +16,6 @@
       "supportsTablet": true
     },
     "android": {
-        "config": {
-          "googleMobileAdsAppId": "ca-app-pub-5939388532042811~8359733839"
-        },
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -38,6 +35,15 @@
       "eas": {
         "projectId": "5b5714fe-0b46-4fcc-b601-8d887d6d21ff"
       }
-    }
+    },
+    "plugins": [
+      [
+        "react-native-google-mobile-ads",
+        {
+          "android_app_id": "ca-app-pub-5939388532042811~8359733839"
+          // "ios_app_id": "ca-app-pub-xxxxxxxx~xxxxxxxx" // Add if you have an iOS app ID
+        }
+      ]
+    ]
   }
 }
