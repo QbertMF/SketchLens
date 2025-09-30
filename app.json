@@ -2,7 +2,7 @@
   "expo": {
     "name": "SketchLens",
     "slug": "SketchLens",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -40,8 +40,17 @@
       [
         "react-native-google-mobile-ads",
         {
-          "android_app_id": "ca-app-pub-5939388532042811~8359733839"
-          // "ios_app_id": "ca-app-pub-xxxxxxxx~xxxxxxxx" // Add if you have an iOS app ID
+          //"android_app_id": "ca-app-pub-5939388532042811~8359733839"
+          "android_app_id": "ca-app-pub-3940256099942544~3347511713"   // Demo APP ID
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableProguardInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true
+          }
         }
       ]
     ]

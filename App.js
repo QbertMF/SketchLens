@@ -1,13 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-let AdMobBanner = null;
 import Constants from 'expo-constants';
-if (Constants.appOwnership !== 'expo') {
-  try {
-    AdMobBanner = require('expo-ads-admob').AdMobBanner;
-  } catch (e) {
-    AdMobBanner = null;
-  }
-}
+import mobileAds, { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 import { Ionicons } from '@expo/vector-icons';
 import { Modal, ScrollView } from 'react-native';
 import { StyleSheet, Text, View, TouchableOpacity, Image, Alert, Dimensions, PanResponder } from 'react-native';
@@ -32,6 +25,20 @@ export default function CameraScreen() {
   const [screenDimensions, setScreenDimensions] = useState(Dimensions.get('window'));
   const [orientation, setOrientation] = useState('portrait');
   const cameraRef = useRef(null);
+
+  // Initialize AdMob
+  useEffect(() => {
+    if (Constants.appOwnership !== 'expo') {
+      mobileAds()
+        .initialize()
+        .then(adapterStatuses => {
+          console.log('AdMob initialized:', adapterStatuses);
+        })
+        .catch(error => {
+          console.log('AdMob initialization error:', error);
+        });
+    }
+  }, []);
 
   // Gesture handling for overlay image using PanResponder
   const scale = useSharedValue(1);
@@ -615,22 +622,21 @@ export default function CameraScreen() {
             AdMob is not supported in Expo Go. Build a custom app to enable ads.
           </Text>
         </View>
-      ) : AdMobBanner ? (
-        <View style={{ alignItems: 'center', marginBottom: 8 }}>
-          <AdMobBanner
-            bannerSize="smartBannerPortrait"
-            adUnitID="ca-app-pub-5939388532042811/1522862745"
-            servePersonalizedAds
-            onDidFailToReceiveAdWithError={error => {
-              console.log('AdMob error:', error);
-            }}
-          />
-        </View>
       ) : (
         <View style={{ alignItems: 'center', marginBottom: 8 }}>
-          <Text style={{ color: 'red', fontSize: 14 }}>
-            AdMobBanner component not available.
-          </Text>
+          <BannerAd
+            unitId="ca-app-pub-3940256099942544/6300978111"
+            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+            requestOptions={{
+              requestNonPersonalizedAdsOnly: false,
+            }}
+            onAdLoaded={() => {
+              console.log('Banner ad loaded');
+            }}
+            onAdFailedToLoad={error => {
+              console.log('Banner ad failed to load:', error);
+            }}
+          />
         </View>
       )}
     </View>
