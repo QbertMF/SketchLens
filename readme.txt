@@ -9,4 +9,11 @@ npx eas build -p android
 Use:
 react-native-google-mobile-ads
 
-
+"plugins": [
+      [
+        "react-native-google-mobile-ads",
+        {
+          //"android_app_id": "ca-app-pub-5939388532042811~8359733839"
+          "android_app_id": "ca-app-pub-3940256099942544~3347511713"   // Demo APP ID
+        }
+      ],

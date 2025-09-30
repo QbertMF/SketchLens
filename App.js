@@ -1,6 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Constants from 'expo-constants';
-import mobileAds, { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
+
+// Safely import AdMob components
+let mobileAds = null;
+let BannerAd = null;
+let BannerAdSize = null;
+let isAdMobAvailable = false;
+
+if (Constants.appOwnership !== 'expo') {
+  try {
+    const adMobModule = require('react-native-google-mobile-ads');
+    mobileAds = adMobModule.default;
+    BannerAd = adMobModule.BannerAd;
+    BannerAdSize = adMobModule.BannerAdSize;
+    isAdMobAvailable = true;
+    console.log('AdMob module loaded successfully');
+  } catch (error) {
+    console.log('AdMob module not available:', error.message);
+    isAdMobAvailable = false;
+  }
+}
 import { Ionicons } from '@expo/vector-icons';
 import { Modal, ScrollView } from 'react-native';
 import { StyleSheet, Text, View, TouchableOpacity, Image, Alert, Dimensions, PanResponder } from 'react-native';
@@ -28,9 +47,15 @@ export default function CameraScreen() {
 
   // Initialize AdMob
   useEffect(() => {
-    if (Constants.appOwnership !== 'expo') {
+    if (Constants.appOwnership !== 'expo' && isAdMobAvailable && mobileAds) {
       mobileAds()
-        .initialize()
+        .setRequestConfiguration({
+          // Set the test device IDs for development
+          testDeviceIdentifiers: ['EMULATOR'],
+        })
+        .then(() => {
+          return mobileAds().initialize();
+        })
         .then(adapterStatuses => {
           console.log('AdMob initialized:', adapterStatuses);
         })
@@ -622,7 +647,7 @@ export default function CameraScreen() {
             AdMob is not supported in Expo Go. Build a custom app to enable ads.
           </Text>
         </View>
-      ) : (
+      ) : isAdMobAvailable && BannerAd && BannerAdSize ? (
         <View style={{ alignItems: 'center', marginBottom: 8 }}>
           <BannerAd
             unitId="ca-app-pub-3940256099942544/6300978111"
@@ -637,6 +662,12 @@ export default function CameraScreen() {
               console.log('Banner ad failed to load:', error);
             }}
           />
+        </View>
+      ) : (
+        <View style={{ alignItems: 'center', marginBottom: 8 }}>
+          <Text style={{ color: 'orange', fontSize: 14 }}>
+            AdMob module not available in this build.
+          </Text>
         </View>
       )}
     </View>

@@ -2,7 +2,7 @@
   "expo": {
     "name": "SketchLens",
     "slug": "SketchLens",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -40,8 +40,7 @@
       [
         "react-native-google-mobile-ads",
         {
-          //"android_app_id": "ca-app-pub-5939388532042811~8359733839"
-          "android_app_id": "ca-app-pub-3940256099942544~3347511713"   // Demo APP ID
+          "android_app_id": "ca-app-pub-3940256099942544~3347511713"
         }
       ],
       [
