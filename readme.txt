@@ -4,7 +4,11 @@ Sart Expo Go server:
 build release app
 npx expo build:android
 
+Production ABB build
 npx eas build -p android
+
+faster APK build
+eas build -p android --profile development
 
 Use:
 react-native-google-mobile-ads
