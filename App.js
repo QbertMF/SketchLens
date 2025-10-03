@@ -571,7 +571,7 @@ export default function CameraScreen() {
               right: 0,
               bottom: 140, // Above bottom button area
               zIndex: 2,
-              backgroundColor: 'rgba(0,0,255,0.1)', // Temporary blue tint to see gesture area
+              backgroundColor: 'transparent',
             }}
             pointerEvents="auto"
             {...panResponder.panHandlers}
