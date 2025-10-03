@@ -484,7 +484,7 @@ export default function CameraScreen() {
             <ScrollView style={styles.modalScroll} contentContainerStyle={styles.modalScrollContent} showsVerticalScrollIndicator={true}>
               <View>
                 <Text style={styles.modalTitle}>SketchLens</Text>
-                <Text style={styles.modalVersion}>Version 1.0.0</Text>
+                <Text style={styles.modalVersion}>Version 1.5.0</Text>
                 <Text style={styles.modalSectionTitle}>Button Guide</Text>
                 <Text style={styles.modalText}><Ionicons name="image-outline" size={16} color="#444" />  - Select reference image</Text>
                 <Text style={styles.modalText}><Ionicons name="bulb-outline" size={16} color="#444" /> - Adjust overlay opacity</Text>
