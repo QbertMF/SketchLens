@@ -530,8 +530,10 @@ export default function CameraScreen() {
                   right: '5%',
                   bottom: '15%',
                   zIndex: 1,
-                  backgroundColor: 'rgba(0,0,0,0.1)', // Temporary debug background
+                  backgroundColor: 'transparent', // Fully transparent background
                   overflow: 'hidden', // Prevent scaled content from going outside bounds
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 }, 
                 animatedStyle
               ]}
@@ -544,7 +546,6 @@ export default function CameraScreen() {
                   width: '100%',
                   height: '100%',
                   opacity: imageOpacity,
-                  resizeMode: 'contain',
                   transform: [
                     { 
                       rotate: orientation === 'landscape' ? '0deg' : '0deg' 
