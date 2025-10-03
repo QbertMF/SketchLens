@@ -525,7 +525,7 @@ export default function CameraScreen() {
               style={[
                 { 
                   position: 'absolute',
-                  top: '15%',
+                  top: 100, // Start below the top buttons (40 + 46 + padding)
                   left: '5%', 
                   right: '5%',
                   bottom: '15%',

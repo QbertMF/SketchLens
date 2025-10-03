@@ -21,3 +21,7 @@ react-native-google-mobile-ads
           "android_app_id": "ca-app-pub-3940256099942544~3347511713"   // Demo APP ID
         }
       ],
+
+      Ideas:
+      - Add camera Zoom option
+      - Move icons/Buttons in separate container to avoid missed touch events
