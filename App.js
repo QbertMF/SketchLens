@@ -122,21 +122,23 @@ export default function CameraScreen() {
     };
   };
 
+
+
   // PanResponder for handling gestures
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: (evt) => {
         const { nativeEvent } = evt;
         const touchCount = nativeEvent.touches.length;
-        //console.log('� Touch start - touches:', touchCount);
+        
         lastTouchCount.current = touchCount;
         return true;
       },
       onMoveShouldSetPanResponder: (evt, gestureState) => {
         const { nativeEvent } = evt;
         const touchCount = nativeEvent.touches.length;
-        //console.log('👋 Should set responder - touches:', touchCount, 'movement:', gestureState.dx, gestureState.dy);
-        return true; // Always take control
+        
+        return Math.abs(gestureState.dx) > 2 || Math.abs(gestureState.dy) > 2 || touchCount >= 2;
       },
       onPanResponderGrant: (evt) => {
         const { nativeEvent } = evt;
@@ -518,27 +520,25 @@ export default function CameraScreen() {
         </View>
       </Modal>
       <CameraView style={styles.camera} facing={facing} ref={cameraRef}>
-        {/* Overlay Image */}
+        {/* Overlay Image - Visual Only */}
         {overlayImage && (
           <View style={styles.overlayContainer} pointerEvents="box-none">
             <Animated.View 
               style={[
                 { 
                   position: 'absolute',
-                  top: 100, // Start below the top buttons (40 + 46 + padding)
-                  left: '5%', 
-                  right: '5%',
-                  bottom: '15%',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
                   zIndex: 1,
-                  backgroundColor: 'transparent', // Fully transparent background
-                  overflow: 'hidden', // Prevent scaled content from going outside bounds
+                  backgroundColor: 'transparent',
                   justifyContent: 'center',
                   alignItems: 'center',
                 }, 
                 animatedStyle
               ]}
-              pointerEvents="auto"
-              {...panResponder.panHandlers}
+              pointerEvents="none"
             >
               <Image 
                 source={{ uri: overlayImage }} 
@@ -553,11 +553,29 @@ export default function CameraScreen() {
                   ]
                 }}
                 resizeMode="contain"
+                pointerEvents="none"
                 onLoad={() => console.log('Overlay image loaded successfully')}
                 onError={(error) => console.log('Overlay image error:', error)}
               />
             </Animated.View>
           </View>
+        )}
+
+        {/* Gesture Area - Fixed zone between buttons */}
+        {overlayImage && (
+          <View 
+            style={{
+              position: 'absolute',
+              top: 130, // Below top button area
+              left: 0,
+              right: 0,
+              bottom: 140, // Above bottom button area
+              zIndex: 2,
+              backgroundColor: 'rgba(0,0,255,0.1)', // Temporary blue tint to see gesture area
+            }}
+            pointerEvents="auto"
+            {...panResponder.panHandlers}
+          />
         )}
         
         {/* Top Controls */}
