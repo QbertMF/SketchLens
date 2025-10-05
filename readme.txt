@@ -6,6 +6,7 @@ npx expo build:android
 
 Production ABB build
 npx eas build -p android
+eas build -p android --preview development
 
 faster APK build
 eas build -p android --profile development
