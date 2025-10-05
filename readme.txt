@@ -27,9 +27,14 @@ react-native-google-mobile-ads
             unitId="ca-app-pub-5939388532042811/1522862745"
             unitId="ca-app-pub-3940256099942544/6300978111"   // Demo Banner ID
 
-      Ideas:
-      - Add camera Zoom option
-      - Move icons/Buttons in separate container to avoid missed touch events
+ChatGPT:
+- Generate Vorstellungsgraphik:
+Erstelle eine Vorstellungsgraphik für den Google App store. Mit max 1024 × 500 Pixeln. Die app zeigt ein Overlay Bild über der Kameraansicht an, so dass der Verwender das Overlay Bild auf eine Zieloberfläche abzeichnen kann. Die App heisst SketchLens. Das Farbschema ist aus dem angefügten icon ersichtlich. Das Bild soll die App in Aktion zeigen. Das Smartphone liegt auf einem umgedrehten Wasserglass. Der Anwender sieht eine Graphic durch den Bildschirm des Smartphones und zeichnet auf den Untergrund unter dem Smartphone. Das Bild soll stilisiert sein.
+
+Ideas:
+- Add camera Zoom option
+- Move icons/Buttons in separate container to avoid missed touch events
+- Switch on flashlight option
 
 Todo:
 - expo doctor
