@@ -2,7 +2,7 @@
   "expo": {
     "name": "SketchLens",
     "slug": "SketchLens",
-    "version": "1.6.0",
+    "version": "1.7.0",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -24,7 +24,8 @@
       "permissions": [
         "CAMERA",
         "WRITE_EXTERNAL_STORAGE",
-        "READ_EXTERNAL_STORAGE"
+        "READ_EXTERNAL_STORAGE",
+        "WAKE_LOCK"
       ],
       "package": "de.qbert.SketchLens"
     },
