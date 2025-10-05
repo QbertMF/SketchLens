@@ -30,3 +30,8 @@ react-native-google-mobile-ads
       Ideas:
       - Add camera Zoom option
       - Move icons/Buttons in separate container to avoid missed touch events
+
+Todo:
+- expo doctor
+- reduce resolution of assets
+
