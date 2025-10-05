@@ -669,7 +669,7 @@ export default function CameraScreen() {
       ) : isAdMobAvailable && BannerAd && BannerAdSize ? (
         <View style={{ alignItems: 'center', marginBottom: 8 }}>
           <BannerAd
-            unitId="ca-app-pub-3940256099942544/6300978111"
+            unitId="ca-app-pub-5939388532042811/1522862745"
             size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
             requestOptions={{
               requestNonPersonalizedAdsOnly: false,

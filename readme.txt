@@ -22,6 +22,10 @@ react-native-google-mobile-ads
         }
       ],
 
+                <BannerAd
+            unitId="ca-app-pub-5939388532042811/1522862745"
+            unitId="ca-app-pub-3940256099942544/6300978111"   // Demo Banner ID
+
       Ideas:
       - Add camera Zoom option
       - Move icons/Buttons in separate container to avoid missed touch events
