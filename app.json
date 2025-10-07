@@ -52,13 +52,7 @@
         {
           "android": {
             "enableProguardInReleaseBuilds": true,
-            "enableShrinkResourcesInReleaseBuilds": true,
-            "compileSdkVersion": 34,
-            "targetSdkVersion": 34,
-            "manifestQueries": {
-              "package": ["com.google.android.gms"]
-            },
-            "minSdkVersion": 21
+            "enableShrinkResourcesInReleaseBuilds": true
           }
         }
       ]
