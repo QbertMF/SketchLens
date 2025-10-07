@@ -2,8 +2,8 @@
   "expo": {
     "name": "SketchLens",
     "slug": "SketchLens",
-    "version": "1.7.0",
-    "orientation": "default",
+    "version": "1.8.0",
+    "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
@@ -20,7 +20,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true,
+      "edgeToEdgeEnabled": false,
       "permissions": [
         "CAMERA",
         "WRITE_EXTERNAL_STORAGE",
@@ -52,7 +52,13 @@
         {
           "android": {
             "enableProguardInReleaseBuilds": true,
-            "enableShrinkResourcesInReleaseBuilds": true
+            "enableShrinkResourcesInReleaseBuilds": true,
+            "compileSdkVersion": 34,
+            "targetSdkVersion": 34,
+            "manifestQueries": {
+              "package": ["com.google.android.gms"]
+            },
+            "minSdkVersion": 21
           }
         }
       ]

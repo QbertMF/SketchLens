@@ -34,6 +34,7 @@ import Animated, {
   runOnJS
 } from 'react-native-reanimated';
 import { useKeepAwake } from 'expo-keep-awake';
+import { StatusBar } from 'expo-status-bar';
 
 export default function CameraScreen() {
   const [infoVisible, setInfoVisible] = useState(false);
@@ -474,6 +475,7 @@ export default function CameraScreen() {
 
   return (
     <View style={styles.container} key={`${screenDimensions.width}-${screenDimensions.height}`}>
+      <StatusBar style="dark" backgroundColor="#ffffff" />
       {/* Info Modal */}
       <Modal
         visible={infoVisible}
