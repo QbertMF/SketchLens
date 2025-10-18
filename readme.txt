@@ -11,6 +11,11 @@ eas build -p android --preview development
 faster APK build
 eas build -p android --profile development
 
+References:
+  Google PLay Console:
+  https://developer.android.com/distribute/console
+
+
 Use:
 react-native-google-mobile-ads
 
@@ -52,11 +57,8 @@ V1_8
 SketchLens - Digital Tracing Made Simple
 Turn your smartphone into the ultimate artist's companion! SketchLens transforms any surface into your canvas by overlaying reference images through your camera, making tracing and sketching easier than ever before.
 
-🎨 Perfect for Artists & Creators: • Students learning to draw - Practice proportions and techniques • Professional artists - Speed up initial sketches and compositions
-• Hobbyists & crafters - Transfer designs to paper, wood, fabric, or any surface • Kids & beginners - Learn drawing fundamentals with guided tracing
-
 📱 Powerful Features: ✅ Live Camera Overlay - See your reference image transparently over real surfaces ✅ Precision Controls - Pan, zoom, and rotate overlays with intuitive gestures
-✅ Adjustable Transparency - Fine-tune opacity for perfect visibility ✅ Photo Integration - Import any image from your gallery as reference ✅ Screen Lock Prevention - Keep your screen bright during long drawing sessions ✅ Simple Interface - Clean, distraction-free design focused on creation
+✅ Adjustable Transparency - Fine-tune opacity for perfect visibility ✅ Photo Integration - Import any image from your gallery as reference ✅ Simple Interface - Clean, distraction-free design focused on creation
 
 🔥 How It Works:
 
@@ -67,4 +69,17 @@ Turn your smartphone into the ultimate artist's companion! SketchLens transforms
 
 💡 Pro Tips: • Use a phone stand or glass for steady positioning • Adjust opacity to balance reference visibility with your work • Perfect for transferring sketches, logos, patterns, or any design
 
-📚 Educational Value: Ideal for art classes, workshops, and self-taught artists. Learn proper proportions, practice line work, and build confidence in your drawing skills.
+
+Privacy PolicyPrivacy Policy for SketchLens
+
+Data Collection:
+- We do not collect personal data
+- Camera access is used only for overlay functionality
+- Images are processed locally on your device
+- No images are uploaded or stored by our servers
+
+Permissions:
+- Camera: Required for overlay tracing functionality
+- Storage: Used only to save photos you choose to save
+
+Contact: [your-email]
